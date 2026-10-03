@@ -1,0 +1,12 @@
+{{ block title }}Fin de la sesión{{ endblock }}
+{{ block content }}
+<p>Gracias por participar. Su pago se calcula así:</p>
+<table class="table" style="max-width: 520px">
+  <tr><td>Ganancias en el experimento</td><td><strong>{{ pago_ecu }}</strong></td></tr>
+  <tr><td>Ganancias convertidas a pesos</td><td>{{ pago_pesos }}</td></tr>
+  <tr><td>Pago por participar</td><td>{{ tarifa }}</td></tr>
+  <tr><td><strong>Total a recibir</strong></td><td><strong>{{ total }}</strong></td></tr>
+</table>
+<p>Permanezca en su lugar. El personal del laboratorio le llamará para entregarle su pago.
+Puede cerrar esta ventana solo cuando se le indique.</p>
+{{ endblock }}

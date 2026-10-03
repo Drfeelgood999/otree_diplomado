@@ -1,0 +1,7 @@
+{{ block title }}Pregunta de comprensión{{ endblock }}
+{{ block content }}
+  <p>Antes de continuar, responda la siguiente pregunta.</p>
+  {{ formfields }}
+  {{ next_button }}
+  {{ include_sibling 'texto_instrucciones.html' }}
+{{ endblock }}

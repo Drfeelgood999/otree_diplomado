@@ -1,0 +1,7 @@
+{{ block title }}Resultados{{ endblock }}
+{{ block content }}
+  <p>Usted fue el <strong>{{ player.role }}</strong>.</p>
+  <p>El Participante A envió <strong>{{ group.enviado }}</strong> al Participante B.</p>
+  <p>Su ganancia en esta parte es <strong>{{ player.payoff }}</strong>.</p>
+  {{ next_button }}
+{{ endblock }}

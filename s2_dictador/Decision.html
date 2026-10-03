@@ -1,0 +1,13 @@
+{{ block title }}Su decisión{{ endblock }}
+
+{{ block content }}
+    <p>
+        Usted es el <strong>{{ player.role }}</strong>.
+        Tiene {{ C.DOTACION }}.
+    </p>
+
+    {{ formfields }} 
+    {{ next_button }}
+    {{ include_sibling 'texto_instrucciones.html' }}
+{{ endblock }}
+

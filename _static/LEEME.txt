@@ -1,0 +1,1 @@
+Carpeta de archivos estáticos (imágenes, CSS) del proyecto. oTree la requiere aunque esté vacía.
