@@ -72,7 +72,7 @@ SESSION_CONFIGS = [
     dict(
         name='s2_solucion',
         display_name='S2 · Dictador básico (solución)',
-        app_sequence=['s2_dictador_solucion', 'pago_final'],
+        app_sequence=['s2_dictador', 'pago_final'],
         num_demo_participants=2,
     ),
     # ---------------- Sesión 5 ----------------
