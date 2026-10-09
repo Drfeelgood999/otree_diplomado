@@ -1,0 +1,26 @@
+{{ block title }}
+    Su respuesta
+{{ endblock }}
+
+{{ block content }}
+    <p>
+        Usted es el <strong>{{ player.role }}</strong>.
+        Esta es la propuesta del Participante A:
+    </p>
+
+    <ul>
+        <li>
+            Para usted (Participante B):
+            <strong>{{ para_b }}</strong>
+        </li>
+        <li>
+            Para el Participante A:
+            <strong>{{ para_a }}</strong>
+        </li>
+    </ul>
+
+    {{ formfields }}
+    {{ next_button }}
+
+    {{ include_sibling 'texto_instrucciones.html' }}
+{{ endblock }}

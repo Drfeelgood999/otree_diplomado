@@ -70,9 +70,9 @@ from pathlib import Path as _Path
 SESSION_CONFIGS = [
     # ---------------- Sesión 2 ----------------
     dict(
-        name='s2_solucion',
-        display_name='S2 · Dictador básico (solución)',
-        app_sequence=['s2_dictador', 'pago_final'],
+        name='ultimatum',
+        display_name='Ultimátum',
+        app_sequence=['ultimatum', 'pago_final'],
         num_demo_participants=2,
     ),
     # ---------------- Sesión 5 ----------------

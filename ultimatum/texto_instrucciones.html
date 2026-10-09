@@ -4,10 +4,15 @@
   <p>En este experimento usted forma pareja, de manera anónima y al azar, con otra persona
   de esta sala. Una persona de la pareja será el <strong>Participante A</strong> y la otra el
   <strong>Participante B</strong>. Los papeles se asignan al azar.</p>
-  <p>El Participante A recibe {{ C.DOTACION }} y decide cuántos ECU envía al Participante B,
-  desde 0 hasta {{ C.DOTACION }}. El Participante A conserva los ECU que no envía.
-  El Participante B no toma ninguna decisión.</p>
-  <p>Nadie conocerá la identidad de su pareja, ni durante ni después del experimento.</p>
+
+  <p>El Participante A recibe {{ C.DOTACION }} y propone cuántos ECU son para el
+    Participante B, desde 0 hasta {{ C.DOTACION }}. El resto es para el
+    Participante A.</p> <!--- Instrucciones para el Participante A-->
+
+  <p> Después, el Participante B ve la propuesta y decide si la acepta o la
+    rechaza. Si B acepta, cada uno recibe lo que dice la propuesta. Si B
+    rechaza, ninguno de los dos recibe ECU en esta parte.</p> <!--- Instrucciones para el Participante B-->
+
   <p>Cada ECU equivale a {{ valor_ecu }}. Además de lo que
   gane en el experimento, usted recibe {{ session.config.participation_fee }} por participar.</p>
 </div>

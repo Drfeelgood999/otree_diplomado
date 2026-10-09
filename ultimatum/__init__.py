@@ -3,33 +3,18 @@ from otree.api import *
 #Es importanta importar con "*" para que se incluyan todas las funciones y clases disponibles.
 
 doc = """
-Sesión 2 · Juego del dictador básico (PLANTILLA).
+Juego del ultimátum.
 
-Instrucciones para el equipo:
-  - Hay 9 huecos (COMPLETAR S2.1 a S2.9): ocho en este archivo (S2.4 y S2.5
-    tienen dos "___" cada uno) y S2.9 en Decision.html.
-  - Trabaje en orden. Active la plantilla con la variable PLANTILLAS:
-        PowerShell:  $env:PLANTILLAS="s2"; otree devserver
-    Mientras quede un "___" fuera de una función, el servidor NO arranca: el
-    NameError aparece en la terminal con el archivo y la línea. Complete el
-    hueco, guarde y vuelva a ejecutar el comando. Los huecos que están
-    dentro de una función (S2.3, S2.4 y S2.6) solo fallan cuando esa función
-    se ejecuta: por eso los bots son indispensables.
-  - Cada hueco se resuelve con una o dos líneas. La documentación de oTree
-    (Models, Pages, Forms, Templates) tiene todo lo necesario.
-  - Al terminar, ejecute los bots en la misma terminal (con PLANTILLAS=s2):
-        PowerShell:  $env:PLANTILLAS="s2"; otree test s2_plantilla
-
-Dos participantes por grupo. A recibe una dotación y decide cuánto enviar a B;
-B no toma decisiones. Una sola ronda. Pagos en ECU.
-Referencias: Kahneman, Knetsch y Thaler (1986); Forsythe et al. (1994).
+Dos participantes por grupo. A propone cuántos ECU de la dotación son para B.
+B ve la propuesta y la acepta o la rechaza. Si acepta, cada uno recibe lo
+propuesto; si rechaza, los dos reciben 0. Una sola ronda. Pagos en ECU.
 """
 #Las triples comillas permiten escribir un texto largo en varias líneas.
 
 
 # ---------------------------------------------------------------- Clases
 class C(BaseConstants):
-    NAME_IN_URL = 's2_dictador'
+    NAME_IN_URL = 'ultimatum'
     PLAYERS_PER_GROUP = 2
     NUM_ROUNDS = 1
     # COMPLETAR S2.1: la dotación de A es de 100 ECU (use cu(...))
@@ -38,7 +23,7 @@ class C(BaseConstants):
     A_ROLE = 'Participante A'
     B_ROLE = 'Participante B'
     # Respuesta correcta de la pregunta de comprensión
-    RESPUESTA_COMPRENSION = cu(30) #SI ESTUVIESE ESCRITO EN ORDEN, esto se declararía al final
+    RESPUESTA_COMPRENSION = cu(0) #SI ESTUVIESE ESCRITO EN ORDEN, esto se declararía al final
     #Contiene valores generales del diseño, permanecen igual en todo momento.
 
 
@@ -65,20 +50,30 @@ class Group(BaseGroup):
     enviado = models.CurrencyField(
     min = 0,
     max = C.DOTACION,
-    label = '¿Cuántos ECU desea enviar al Participante B?'
+    label='¿Cuántos ECU propone para el Participante B?',
+    doc='ECU que A propone para B.',
+    )
+    aceptado = models.BooleanField(
+    choices=[[True, 'Acepto la propuesta'], [False, 'Rechazo la propuesta']],
+    widget=widgets.RadioSelect,
+    label='¿Acepta la propuesta del Participante A?',
+    doc='True si B acepta la propuesta; False si la rechaza.',
     )
     
+    #  Las cosas que estén escritas en group afectan a los dos participantes.
 
 
 class Player(BasePlayer):
     comprension = models.CurrencyField(
-        label='Si A envía 30 ECU, ¿cuántos ECU recibe B?',
-        doc='Respuesta a la pregunta de comprensión (debe ser 30).',
+        label='Si A propone 30 ECU para B y B rechaza, ¿cuántos ECU recibe B?',
+        doc='Respuesta a la pregunta de comprensión (debe ser 0).',
     )
 
     """La compresión si pertenece a Player porque es una pregunta individual, no de grupo. Cada parjea
     deberá tener una sóla cantidad de enviado,
     de comprensión, y de pago. La pregunta de comprensión es individual.""" 
+
+#Las cosas que estén escritas en player afectan a un solo participante.
 
 
 # ---------------------------------------------------------------- funciones
@@ -99,9 +94,12 @@ def comprension_error_message(player: Player, value):
 def set_payoffs(group: Group):
     a = group.get_player_by_role(C.A_ROLE)
     b = group.get_player_by_role(C.B_ROLE)
-    # COMPLETAR S2.4: pagos de A y de B según el protocolo
-    a.payoff = C.DOTACION - group.enviado
-    b.payoff = group.enviado
+    if group.aceptado:
+        a.payoff = C.DOTACION - group.enviado
+        b.payoff = group.enviado
+    else:
+        a.payoff = 0
+        b.payoff = 0
 
 
 # ---------------------------------------------------------------- páginas
@@ -141,6 +139,24 @@ class Decision(Page):
     def vars_for_template(player: Player):
         return vars_instrucciones(player)
 
+class EsperaPropuesta(WaitPage):
+    body_text = 'Espere a que el Participante A haga su propuesta.'
+
+
+class Respuesta(Page):
+    form_model = 'group'
+    form_fields = ['aceptado']
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.role == C.B_ROLE
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        variables = vars_instrucciones(player)
+        variables['para_b'] = player.group.enviado
+        variables['para_a'] = C.DOTACION - player.group.enviado
+        return variables
 
 class EsperaResultados(WaitPage):
     # COMPLETAR S2.7: ¿qué función se ejecuta cuando llegan los dos miembros de la pareja?
@@ -153,4 +169,12 @@ class Resultados(Page):
 
 
 # COMPLETAR S2.8: orden de las páginas (cinco clases definidas arriba)
-page_sequence = [Instrucciones, Comprension, Decision, EsperaResultados, Resultados]
+page_sequence = [
+    Instrucciones,
+    Comprension,
+    Decision,
+    EsperaPropuesta,
+    Respuesta,
+    EsperaResultados,
+    Resultados
+]

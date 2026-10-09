@@ -1,0 +1,21 @@
+{{ block title }}Resultados{{ endblock }}
+{{ block content }}
+  <p>Usted fue el <strong>{{ player.role }}</strong>.</p>
+  <p>
+    El Participante A propuso
+    <strong>{{ group.enviado }}</strong>
+    para el Participante B.
+</p>
+
+{{ if group.aceptado }}
+    <p>
+        El Participante B <strong>aceptó</strong> la propuesta.
+    </p>
+{{ else }}
+    <p>
+        El Participante B <strong>rechazó</strong> la propuesta.
+    </p>
+{{ endif }}
+  <p>Su ganancia en esta parte es <strong>{{ player.payoff }}</strong>.</p>
+  {{ next_button }}
+{{ endblock }}
